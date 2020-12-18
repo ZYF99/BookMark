@@ -18,6 +18,10 @@ public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecycl
     //上下文 可以是Activity、Fragment
     Context context;
 
+    //点击监听器
+    OnCellTouchListener onCellTouchListener;
+
+
     //备忘录列表
     public List<BookMark> list;
 
@@ -27,6 +31,9 @@ public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecycl
         this.context = context;
     }
 
+    public void setOnCellTouchListener(OnCellTouchListener onCellTouchListener) {
+        this.onCellTouchListener = onCellTouchListener;
+    }
 
     @NonNull
     @Override
@@ -37,8 +44,23 @@ public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecycl
 
     //每个Item绑定数据的方法
     @Override
-    public void onBindViewHolder(@NonNull BookMarkViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BookMarkViewHolder holder, final int position) {
         holder.tvContent.setText(list.get(position).content);
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                onCellTouchListener.onCellLongClick(position);
+                return false;
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onCellTouchListener.onCellClick(position);
+            }
+        });
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String timeStr = simpleDateFormat.format(new Date(list.get(position).getDate()));
         holder.tvTime.setText(timeStr);
@@ -63,6 +85,12 @@ public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecycl
             tvContent = itemView.findViewById(R.id.tv_content);
             tvTime = itemView.findViewById(R.id.tv_time);
         }
+    }
+
+    interface OnCellTouchListener {
+        void onCellLongClick(int position);
+
+        void onCellClick(int position);
     }
 
 }
