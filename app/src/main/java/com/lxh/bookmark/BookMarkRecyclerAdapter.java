@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecyclerAdapter.BookMarkViewHolder> {
@@ -19,6 +21,7 @@ public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecycl
     //备忘录列表
     public List<BookMark> list;
 
+    //构造方法
     public BookMarkRecyclerAdapter(Context context, List<BookMark> list) {
         this.list = list;
         this.context = context;
@@ -32,12 +35,16 @@ public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecycl
         return new BookMarkViewHolder(view);
     }
 
+    //每个Item绑定数据的方法
     @Override
     public void onBindViewHolder(@NonNull BookMarkViewHolder holder, int position) {
         holder.tvContent.setText(list.get(position).content);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String timeStr = simpleDateFormat.format(new Date(list.get(position).getDate()));
+        holder.tvTime.setText(timeStr);
     }
 
-
+    //获得列表中item的总数
     @Override
     public int getItemCount() {
         return list.size();
@@ -54,7 +61,7 @@ public class BookMarkRecyclerAdapter extends RecyclerView.Adapter<BookMarkRecycl
         public BookMarkViewHolder(@NonNull View itemView) {
             super(itemView);
             tvContent = itemView.findViewById(R.id.tv_content);
-            tvTime = itemView.findViewById(R.id.tv_content);
+            tvTime = itemView.findViewById(R.id.tv_time);
         }
     }
 
